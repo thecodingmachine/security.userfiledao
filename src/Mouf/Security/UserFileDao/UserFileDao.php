@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Security\UserFileDao;
 
+use Mouf\Security\UserService\UserDaoInterface;
+
 /**
  * The UserFileDao is an implementation of a UserDao, that stores the application users in a simple PHP file.
  * It can be used together with the UserService to provide easy access management to an application.
