@@ -1,6 +1,8 @@
 <?php
 namespace Mouf\Security\UserFileDao;
 
+use Mouf\Security\UserService\UserInterface;
+
 /**
  * This represents a User the way it is stored by the UserFileDao.
  * Basically, it has a login, password (encoded in sha1), and some options.
