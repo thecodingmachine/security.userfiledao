@@ -3,7 +3,7 @@
     "description": "This package contains an implementation of a UserDao, that stores the application users in a simple PHP file. It can be used together with the MoufUserService to provide easy access management to an application. Since the users are stored in a PHP file, this very special DAO does not require a database!",
     "keywords": ["security", "userdao", "user management", "mouf"],
     "homepage": "https://github.com/thecodingmachine/security.userfiledao",
-    "type": "library",
+    "type": "mouf-library",
     "license": "MIT",
     "authors": [
         {
