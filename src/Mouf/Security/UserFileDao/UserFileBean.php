@@ -58,4 +58,34 @@ class UserFileBean implements UserInterface {
 		return $this->options;
 	}
 	
+	/**
+	 * Sets the login of the user.
+	 * 
+	 * @param string $login
+	 */
+	public function setLogin($login) {
+		$this->login = $login;	
+	}
+	
+	/**
+	 * Sets the password for this user.
+	 * You pass a clear text password to the function but it will be directly hashed.
+	 * 
+	 * @param string $password
+	 */
+	public function setClearTextPassword($password) {
+		$this->password = sha1($password);
+	}
+	
+	/**
+	 * Sets the options of the user.
+	 * This can be anything as long as it is serializable.
+	 *
+	 * @param array $options
+	 */
+	public function setOptions($options) {
+		$this->options = $options;
+	}
+	
+	
 }

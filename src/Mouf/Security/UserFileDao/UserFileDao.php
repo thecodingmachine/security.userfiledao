@@ -8,10 +8,10 @@ use Mouf\Security\UserService\UserDaoInterface;
  * It can be used together with the UserService to provide easy access management to an application.
  * Since the users are stored in a PHP file, this very special DAO does not require a database!
  * 
- * TODO: The DAO can also be used to add/edit/remove users from the file. The users file is dynamically written, but can also be manually edited.
+ * The DAO can also be used to add/edit/remove users from the file.
+ * The users file is dynamically written, but can also be manually edited.
  * 
  * @author David
- * @Component
  */
 class UserFileDao implements UserDaoInterface {
 
@@ -151,4 +151,24 @@ class UserFileDao implements UserDaoInterface {
 		}
 		fclose($fp);
 	}
+	
+	/**
+	 * Registers a new user in the Dao.
+	 * You must call the "write" method for this user to be saved.
+	 * 
+	 * @param UserFileBean $userFileBean
+	 */
+	public function registerUser(UserFileBean $userFileBean) {
+		$this->usersAsObjects[$userFileBean->getLogin()] = $userFileBean;
+	}
+	
+	/**
+	 * Removes a user from the Dao.
+	 * You must call the "write" method for this user to be definitely removed.
+	 *
+	 * @param string $login
+	 */
+	public function removeUser($login) {
+		unset($this->usersAsObjects[$login]);
+	}	
 }
