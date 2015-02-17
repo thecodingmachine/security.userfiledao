@@ -173,7 +173,7 @@ class UserFileDao implements UserDaoInterface {
 		fwrite($fp, " */\n");
 		fwrite($fp, "\n");
 		fwrite($fp, "\$users = ".var_export($users, true));
-		fwrite($fp, "\n");
+		fwrite($fp, ";\n");
 		fclose($fp);
 	}
 	
