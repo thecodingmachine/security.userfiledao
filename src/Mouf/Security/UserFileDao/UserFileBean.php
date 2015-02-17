@@ -74,7 +74,7 @@ class UserFileBean implements UserInterface {
 	 * @param string $password
 	 */
 	public function setClearTextPassword($password) {
-		$this->password = sha1($password);
+		$this->password = password_hash($password, PASSWORD_DEFAULT);
 	}
 	
 	/**

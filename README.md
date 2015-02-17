@@ -30,7 +30,7 @@ This package comes as a composer package:
 ```php
 {
 	"require": {
-		"mouf/security.userfiledao": "~2.0"
+		"mouf/security.userfiledao": "~3.0"
 	}
 }
 ```
@@ -41,7 +41,9 @@ How does it work?
 
 Simply create a `UserFileDao` instance in Mouf and bind it to the `userService` instance.
 
-The only property you need to configure is the `$userFile`. It contains a path to the file that contains the list of users.
+The only property you need to configure is the `$userFile` constructor argument.
+It contains a path to the file that contains the list of users.
+The path is relative to the root of your project.
 
 ![userFileDao](doc/images/userfiledao.png)
 
