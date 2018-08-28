@@ -12,9 +12,5 @@ before_script:
 - composer update $PREFER_LOWEST --no-interaction
 - mkdir -p build/logs
 script:
-- "./vendor/bin/phpunit"
-- "./vendor/bin/composer-require-checker --config-file=composer-require-checker.json"
 - composer cs-check
 - composer phpstan
-after_script:
-- php vendor/bin/coveralls -v
