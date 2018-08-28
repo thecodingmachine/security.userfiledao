@@ -13,13 +13,30 @@
         }
     ],
     "require": {
-    	"php": ">=5.4.0",
-        "mouf/security.userservice": "2.*",
-        "ircmaxell/password-compat": "~1.0"
+    	"php": ">=7.1",
+        "mouf/security.userservice": "^3",
+        "thecodingmachine/funky": "^1"
     },
+    "require-dev": {
+        "phpstan/phpstan": "^0.10.3",
+        "thecodingmachine/phpstan-strict-rules": "^0.10.3",
+        "thecodingmachine/discovery": "^1.2.1",
+        "squizlabs/php_codesniffer": "^3.3.1"
+    },
+    "conflict": {
+        "mouf/mouf": "~2.0.0"
+    },
+    "scripts": {
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "phpstan": "phpstan analyse src -c phpstan.neon --level=5 --no-progress -vvv"
+    },
+
     "autoload": {
         "psr-0": {
-            "Mouf": "src/"
+            "Mouf\\Security\\UserFileDao\\": "src/"
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }

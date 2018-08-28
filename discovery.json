@@ -1,0 +1,5 @@
+{
+  "Interop\\Container\\ServiceProviderInterface": [
+    "Mouf\\Security\\UserFileDao\\UserFileDaoServiceProvider"
+  ]
+}
