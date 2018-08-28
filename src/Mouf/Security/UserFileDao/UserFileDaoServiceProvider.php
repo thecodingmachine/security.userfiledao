@@ -3,7 +3,6 @@
 
 namespace Mouf\Security\UserFileDao;
 
-
 use Psr\Container\ContainerInterface;
 use TheCodingMachine\Funky\Annotations\Factory;
 use TheCodingMachine\Funky\ServiceProvider;
