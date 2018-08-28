@@ -15,8 +15,14 @@ class UserFileBean implements UserInterface {
 	public $login;
 	public $password;
 	public $options;
-	
-	public function __construct($login = null, $password = null, $options = null) {
+
+    /**
+     * UserFileBean constructor.
+     * @param string|null $login
+     * @param string|null $password
+     * @param mixed $options
+     */
+	public function __construct(string $login = null, string $password = null, $options = null) {
 		$this->login = $login;
 		$this->password = $password;
 		$this->options = $options;
@@ -25,7 +31,7 @@ class UserFileBean implements UserInterface {
 	/**
 	 * Returns the ID for the current user.
 	 *
-	 * @return string
+	 * @return string|int
 	 */
 	public function getId() {
 		return $this->login;
@@ -36,7 +42,7 @@ class UserFileBean implements UserInterface {
 	 *
 	 * @return string
 	 */
-	public function getLogin() {
+	public function getLogin(): string {
 		return $this->login;
 	}
 	
@@ -45,14 +51,14 @@ class UserFileBean implements UserInterface {
 	 *
 	 * @return string
 	 */
-	public function getEncodedPassword() {
+	public function getEncodedPassword(): ?string {
 		return $this->password;
 	}
 
 	/**
 	 * Returns the options for the current user.
 	 *
-	 * @return string
+	 * @return mixed
 	 */
 	public function getOptions() {
 		return $this->options;
@@ -63,7 +69,7 @@ class UserFileBean implements UserInterface {
 	 * 
 	 * @param string $login
 	 */
-	public function setLogin($login) {
+	public function setLogin(string $login): void {
 		$this->login = $login;	
 	}
 	
@@ -73,7 +79,7 @@ class UserFileBean implements UserInterface {
 	 * 
 	 * @param string $password
 	 */
-	public function setClearTextPassword($password) {
+	public function setClearTextPassword(string $password): void {
 		$this->password = sha1($password);
 	}
 	
@@ -81,9 +87,9 @@ class UserFileBean implements UserInterface {
 	 * Sets the options of the user.
 	 * This can be anything as long as it is serializable.
 	 *
-	 * @param array $options
+	 * @param mixed $options
 	 */
-	public function setOptions($options) {
+	public function setOptions($options): void {
 		$this->options = $options;
 	}
 	

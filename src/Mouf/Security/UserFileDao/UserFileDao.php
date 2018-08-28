@@ -2,6 +2,7 @@
 namespace Mouf\Security\UserFileDao;
 
 use Mouf\Security\UserService\UserDaoInterface;
+use Mouf\Security\UserService\UserInterface;
 
 /**
  * The UserFileDao is an implementation of a UserDao, that stores the application users in a simple PHP file.
@@ -15,16 +16,14 @@ use Mouf\Security\UserService\UserDaoInterface;
  */
 class UserFileDao implements UserDaoInterface {
 
-	/**
+    /**
 	 * The path to the file containing the list of users and passwords.
 	 * The path is relative to the ROOT_PATH. It should not start with a "/".
 	 * It is a PHP file, therefore, it is a good idea if it has the ".php" extension.
 	 * 
-	 * @Property
-	 * @Compulsory
 	 * @var string
 	 */
-	public $userFile;
+	private $userFile;
 
 	/**
 	 * True if the file has been loaded, false otherwise.
@@ -38,17 +37,23 @@ class UserFileDao implements UserDaoInterface {
 	 * @var array<UserFileBean>
 	 */
 	private $usersAsObjects;
-	
-	/**
+
+	public function __construct(string $userFile)
+    {
+        $this->userFile = $userFile;
+    }
+
+    /**
 	 * Returns a user from its login and its password, or null if the login or credentials are false.
 	 *
 	 * @param string $login
 	 * @param string $password
 	 * @return UserFileBean
 	 */
-	public function getUserByCredentials($login, $password) {
+	public function getUserByCredentials(string $login, string $password): ?UserInterface {
 		$this->load();
-		
+
+		/** @var UserFileBean $userBean */
 		$userBean = $this->getUserByLogin($login);
 		if ($userBean != null && $userBean->getEncodedPassword() == sha1($password)) {
 			return $userBean;
@@ -63,7 +68,7 @@ class UserFileDao implements UserDaoInterface {
 	 * @param string $token
 	 * @return UserInterface
 	 */
-	public function getUserByToken($token) {
+	public function getUserByToken(string $token): ?UserInterface {
 		throw new UserFileDaoException("getUserByToken is not implemented for the UserFileDao.");
 	}
 	
@@ -72,19 +77,19 @@ class UserFileDao implements UserDaoInterface {
 	 *
 	 * @param string $token
 	 */
-	public function discardToken($token) {
+	public function discardToken(string $token): void {
 		throw new UserFileDaoException("discardToken is not implemented for the UserFileDao.");
 	}
 	
 	/**
 	 * Returns a user from its ID
 	 *
-	 * @param string $id
+	 * @param string|int $id
 	 * @return UserInterface
 	 */
-	public function getUserById($id) {
+	public function getUserById($id): ?UserInterface {
 		// We don't have ID's so ID=login in the UserFileDao.
-		return $this->getUserByLogin($login);
+		return $this->getUserByLogin($id);
 	}
 	
 	/**
@@ -93,7 +98,7 @@ class UserFileDao implements UserDaoInterface {
 	 * @param string $login
 	 * @return UserFileBean
 	 */
-	public function getUserByLogin($login) {
+	public function getUserByLogin(string $login): ?UserInterface {
 		$this->load();
 		
 		if (isset($this->usersAsObjects[$login])) {
@@ -107,15 +112,15 @@ class UserFileDao implements UserDaoInterface {
 	 * Note: you don't have to call the function manually. It will be called for you.
 	 * 
 	 */	
-	public function load() {
+	private function load(): void {
 		if ($this->isFileLoaded) {
 			return;
 		}
 		if (!$this->isUserFileAvailable()) {
-			throw new UserFileDaoException("Could not load the file containing the users: '".ROOT_PATH.$this->userFile."' does not exist or is not writable.");
+			throw new UserFileDaoException("Could not load the file containing the users: '".__DIR__.'/../../../../../../'.$this->userFile."' does not exist or is not writable.");
 		}
 		
-		include ROOT_PATH.$this->userFile;
+		include __DIR__.'/../../../../../../'.$this->userFile;
 		
 		foreach ($users as $login=>$user) {
 			$this->usersAsObjects[$login] = new UserFileBean($login, $user['password'], $user['options']);
@@ -124,21 +129,21 @@ class UserFileDao implements UserDaoInterface {
 	
 	/**
 	 * Checks whether the file containing the users is available or not.
-	 * @return Returns true on success, false if the file is missing or not readable.
+	 * @return bool Returns true on success, false if the file is missing or not readable.
 	 */
-	public function isUserFileAvailable() {
-		return is_readable(ROOT_PATH.$this->userFile);
+	public function isUserFileAvailable(): bool {
+		return is_readable(__DIR__.'/../../../../../../'.$this->userFile);
 	}
 	
 	/**
 	 * Writes the file containing the user list.
 	 */
-	public function write() {
-		if (!is_writable(dirname(ROOT_PATH.$this->userFile)) || (file_exists(ROOT_PATH.$this->userFile) && !is_writable(ROOT_PATH.$this->userFile))) {
-			throw new MoufException("Error, unable to write file ".ROOT_PATH.$this->userFile);
+	public function write(): void {
+		if (!is_writable(dirname(__DIR__.'/../../../../../../'.$this->userFile)) || (file_exists(__DIR__.'/../../../../../../'.$this->userFile) && !is_writable(__DIR__.'/../../../../../../'.$this->userFile))) {
+			throw new UserFileDaoException("Error, unable to write file ".__DIR__.'/../../../../../../'.$this->userFile);
 		}
 		
-		$fp = fopen(ROOT_PATH.$this->userFile, "w");
+		$fp = fopen(__DIR__.'/../../../../../../'.$this->userFile, "w");
 		fwrite($fp, "<?php\n");
 		fwrite($fp, "/**\n");
 		fwrite($fp, " * This is a file automatically generated by the Mouf framework. Do not modify its structure, as it could be overwritten.\n");
@@ -146,7 +151,7 @@ class UserFileDao implements UserDaoInterface {
 		fwrite($fp, " */\n");
 		fwrite($fp, "\n");
 		foreach ($this->usersAsObjects as $login=>$userBean) {
-			/* @var $userBean FileUserBean  */
+			/* @var $userBean UserFileBean  */
 			fwrite($fp, "\$users[".var_export($login, true)."] = array('password'=>".var_export($userBean->getEncodedPassword(), true).", 'options'=>".var_export($userBean->getOptions(), true).");\n");
 		}
 		fclose($fp);
@@ -158,7 +163,7 @@ class UserFileDao implements UserDaoInterface {
 	 * 
 	 * @param UserFileBean $userFileBean
 	 */
-	public function registerUser(UserFileBean $userFileBean) {
+	public function registerUser(UserFileBean $userFileBean): void {
 		$this->usersAsObjects[$userFileBean->getLogin()] = $userFileBean;
 	}
 	
@@ -168,7 +173,7 @@ class UserFileDao implements UserDaoInterface {
 	 *
 	 * @param string $login
 	 */
-	public function removeUser($login) {
+	public function removeUser(string $login): void {
 		unset($this->usersAsObjects[$login]);
 	}	
 }
