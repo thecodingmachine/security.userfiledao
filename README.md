@@ -27,12 +27,8 @@ Installing
 
 This package comes as a composer package:
 
-```php
-{
-	"require": {
-		"mouf/security.userfiledao": "~3.0"
-	}
-}
+```shell
+composer require mouf/security.userfiledao
 ```
 
 
